@@ -1,0 +1,36 @@
+{
+  "name": "rrhh",
+  "packageManager": "npm@10.8.3",
+  "devDependencies" : {
+    "@babel/cli" : "^7.23.0",
+    "autoprefixer" : "^10.4.16",
+    "browser-sync" : "^3.0.0",
+    "cssnano" : "^6.0.1",
+    "mkdirp" : "^3.0.1",
+    "npm-run-all" : "^4.1.5",
+    "onchange" : "^7.1.0",
+    "path-exists-cli" : "^2.0.0",
+    "postcss" : "^8.4.31",
+    "postcss-cli" : "^11.0.0",
+    "recursive-copy-cli" : "^1.0.20",
+    "tailwindcss" : "^3.3.3"
+  },
+  "scripts" : {
+    "build" : "npm-run-all --parallel build:*",
+    "build:html" : "recursive-copy \"src/main/resources/templates\" build/resources/main/templates -w",
+    "build:css" : "mkdirp build/resources/main/static/css && postcss src/main/resources/static/css/*.css -d build/resources/main/static/css",
+    "build:js" : "path-exists src/main/resources/static/js && (mkdirp build/resources/main/static/js && babel src/main/resources/static/js/ --out-dir build/resources/main/static/js/) || echo \"No 'src/main/resources/static/js' directory found.\"",
+    "build:svg" : "path-exists src/main/resources/static/svg && recursive-copy \"src/main/resources/static/svg\" build/resources/main/static/svg -w -f \"**/*.svg\" || echo \"No 'src/main/resources/static/svg' directory found.\"",
+    "build-prod" : "NODE_ENV='production' npm-run-all --parallel build-prod:*",
+    "build-prod:html" : "npm run build:html",
+    "build-prod:css" : "npm run build:css",
+    "build-prod:js" : "path-exists src/main/resources/static/js && (mkdirp build/resources/main/static/js && babel src/main/resources/static/js/ --minified --out-dir build/resources/main/static/js/) || echo \"No 'src/main/resources/static/js' directory found.\"",
+    "build-prod:svg" : "npm run build:svg",
+    "watch" : "npm-run-all --parallel watch:*",
+    "watch:html" : "onchange \"src/main/resources/templates/**/*.html\" -- npm-run-all --serial build:css build:html",
+    "watch:css" : "onchange \"src/main/resources/static/css/**/*.css\" -- npm run build:css",
+    "watch:js" : "onchange \"src/main/resources/static/js/**/*.js\" -- npm run build:js",
+    "watch:svg" : "onchange \"src/main/resources/static/svg/**/*.svg\" -- npm run build:svg",
+    "watch:serve" : "browser-sync start --no-inject-changes --proxy localhost:8080 --files \"build/resources/main/templates\" \"build/resources/main/static\""
+  }
+}

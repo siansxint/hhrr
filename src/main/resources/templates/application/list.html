@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>Applications</title>
+</head>
+<body>
+<main layout:fragment="content" class="flex flex-col flex-grow container mx-auto my-4">
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-xl font-semibold text-gray-900 dark:text-white">Applications</h1>
+        <a sec:authorize="hasAuthority('USER')" href="/"
+           class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Create New
+            Application</a>
+    </div>
+
+    <div class="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Owner
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Salary Expectation
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Experiences
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Abilities
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Trainings
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Languages
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Position
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Actions
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="app : ${applications}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td th:text="${app.owner.name}" class="px-6 py-4">Owner</td>
+                <td th:text="${app.salaryExpectation}" class="px-6 py-4">Salary Expectation</td>
+                <td class="px-6 py-4">
+                    <ul>
+                        <li th:each="experience : ${app.experiences}" th:text="${experience.company}"></li>
+                    </ul>
+                </td>
+                <td class="px-6 py-4">
+                    <ul>
+                        <li th:each="ability : ${app.abilities}" th:text="${ability.description}"></li>
+                    </ul>
+                </td>
+                <td class="px-6 py-4">
+                    <ul>
+                        <li th:each="training : ${app.trainings}" th:text="${training.description}"></li>
+                    </ul>
+                </td>
+                <td class="px-6 py-4">
+                    <ul>
+                        <li th:each="language : ${app.languages}" th:text="${language.name}"></li>
+                    </ul>
+                </td>
+                <td th:text="${app.position.name}" class="px-6 py-4">Position</td>
+                <td class="py-8 flex justify-around">
+                    <a th:href="@{/applications/edit/{id}(id=${app.id})}" class="text-blue-600 hover:underline">Edit</a>
+                    <form th:action="@{/applications/delete/{id}(id=${app.id})}" method="post"
+                          onsubmit="return confirm('Are you sure you want to delete this application?');">
+                        <button type="submit" class="text-red-600 hover:underline">Delete</button>
+                    </form>
+                    <form sec:authorize="hasAnyAuthority('EMPLOYEE', 'ADMIN')"
+                          th:action="@{/applications/hire/{id}(id=${app.id})}" method="get"
+                          onsubmit="return confirm('Are you sure you want to hire this applicant?');">
+                        <button type="submit" class="text-green-700 hover:underline">Hire</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

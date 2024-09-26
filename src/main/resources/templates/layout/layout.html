@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">HHRR</title>
+
+    <link rel="stylesheet" th:href="@{/css/application.css}">
+    <style>
+        .fade-out {
+            opacity: 1;
+            transition: opacity 1s ease-out;
+        }
+
+        .fade-out.hide {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body class="dark:bg-gray-900 antialiased flex flex-col min-h-screen">
+<header class="flex justify-center content-center bg-white dark:bg-gray-800 shadow-md py-4">
+    <div class="container flex items-center justify-between relative">
+        <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-200">RRHH System</h1>
+
+        <nav class="absolute left-1/2 transform -translate-x-1/2">
+            <ul class="flex space-x-6">
+                <li>
+                    <a href="/" class="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">Positions</a>
+                </li>
+                <li>
+                    <a href="/applications" class="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">Applications</a>
+                </li>
+                <li>
+                    <a href="/employees" sec:authorize="hasAnyAuthority('EMPLOYEE', 'ADMIN')" class="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">Employees</a>
+                </li>
+            </ul>
+        </nav>
+
+        <a th:href="@{/logout}" sec:authentication="name" class="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">Profile</a>
+    </div>
+</header>
+
+<main layout:fragment="main">
+    <div th:if="${error}" class="bg-red-500 text-white p-2 rounded mb-4 fade-out" id="error-message">
+        <p th:text="${error}">Error message</p>
+    </div>
+    <div layout:fragment="content">
+        Specific page content goes here
+    </div>
+</main>
+
+<footer class="bg-white dark:bg-gray-800 py-4 mt-auto">
+    <div class="container mx-auto px-4 text-center text-gray-600 dark:text-gray-400">
+        © 2024 Human Resources Management. All rights reserved.
+    </div>
+</footer>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Function to hide message after a delay
+        function fadeOutMessage(id, delay) {
+            const messageElement = document.getElementById(id);
+            if (messageElement) {
+                setTimeout(() => {
+                    messageElement.classList.add('hide');
+                }, delay);
+            }
+        }
+
+        fadeOutMessage('error-message', 5000); // 5 seconds
+    });
+</script>
+<script layout:fragment="scripts">
+    <!-- Additional scripts from decorated views -->
+</script>
+</body>
+</html>

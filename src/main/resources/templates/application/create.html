@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Application</title>
+</head>
+<body>
+<main layout:fragment="content" class="flex flex-col flex-grow justify-between container mx-auto my-4">
+    <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Apply for Position: <span
+                th:text="*{app.position.name}"></span></h2>
+
+        <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md shadow">
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">Position Details</h2>
+            <p><strong>Description:</strong> <span th:text="${app.position.description}"></span></p>
+            <p><strong>Risk Level:</strong> <span th:text="${app.position.risk}"></span></p>
+            <p><strong>Salary Range:</strong> <span th:text="${app.position.minSalary}"></span> - <span
+                    th:text="${app.position.maxSalary}"></span></p>
+            <p><strong>Department:</strong> <span th:text="${app.position.department}"></span></p>
+
+            <p><strong>Required Languages:</strong></p>
+            <ul>
+                <li th:each="language : ${app.position.languages}" th:text="${language.name}"></li>
+            </ul>
+        </div>
+
+        <form th:action="@{/applications/create}" th:object="${app}" method="post" class="space-y-6">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-md shadow">
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Your Application Details</h2>
+                <div>
+                    <input type="hidden"
+                           th:field="*{id}"
+                           class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                </div>
+                <div>
+                    <input type="hidden"
+                           th:field="*{position.id}"
+                           class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                </div>
+                <div>
+                    <input type="hidden"
+                           th:field="*{owner.id}"
+                           class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                </div>
+
+                <div>
+                    <label for="salaryExpectation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Salary
+                        Expectation</label>
+                    <input type="number" id="salaryExpectation" name="salaryExpectation"
+                           th:field="*{salaryExpectation}"
+                           required
+                           class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    <span th:if="${#fields.hasErrors('salaryExpectation')}" th:errors="*{salaryExpectation}">Invalid Salary</span>
+                </div>
+
+                <div>
+                    <label for="languages"
+                           class="block text-sm font-medium text-gray-700 dark:text-gray-300">Languages</label>
+                    <select id="languages" name="languages"
+                            th:field="*{languages}"
+                            multiple
+                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        <option th:each="language : ${languages}"
+                                th:value="${language.id}"
+                                th:text="${language.name}"></option>
+                    </select>
+                </div>
+
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2 mt-4">Experiences</h3>
+                <div id="experiences" th:field="*{experiences}">
+                    <div class="experience grid grid-cols-4 gap-4 mt-2"
+                         th:each="experience, stat : *{experiences}"
+                         th:id="|experience-${stat.index}|">
+                        <div>
+                            <label for="experience-salary"
+                                   class="block text-sm font-medium text-gray-700 dark:text-gray-300">Salary</label>
+                            <input type="number" id="experience-salary"
+                                   th:field="*{experiences[__${stat.index}__].salary}"
+                                   required
+                                   class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+
+                        <div>
+                            <label for="experience-started"
+                                   class="block text-sm font-medium text-gray-700 dark:text-gray-300">Started</label>
+                            <input type="date" id="experience-started"
+                                   th:field="*{experiences[__${stat.index}__].started}"
+                                   required
+                                   class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+
+                        <div>
+                            <label for="experience-finished"
+                                   class="block text-sm font-medium text-gray-700 dark:text-gray-300">Finished</label>
+                            <input type="date" id="experience-finished"
+                                   th:field="*{experiences[__${stat.index}__].finished}"
+                                   class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+
+                        <div>
+                            <label for="experience-company"
+                                   class="block text-sm font-medium text-gray-700 dark:text-gray-300">Company</label>
+                            <input type="text" id="experience-company"
+                                   th:field="*{experiences[__${stat.index}__].company}"
+                                   required
+                                   class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" id="add-experience"
+                        class="mt-4 px-4 py-2 text-sm text-blue-500 hover:underline dark:text-blue-400">Add Experience
+                </button>
+                <button type="button" id="remove-experience"
+                        class="mt-4 px-4 py-2 text-sm text-blue-500 hover:underline dark:text-blue-400">Remove
+                    Experience
+                </button>
+
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2 mt-4">Trainings</h3>
+                <div id="trainings" th:field="*{trainings}">
+                    <div class="training grid grid-cols-4 gap-4 mt-2"
+                         th:each="training, stat : *{trainings}"
+                         th:id="|training-${stat.index}|">
+                        <div>
+                            <label for="training-description"
+                                   class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                            <input type="text" id="training-description"
+                                   th:field="*{trainings[__${stat.index}__].description}"
+                                   required
+                                   class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" id="add-training"
+                        class="mt-4 px-4 py-2 text-sm text-blue-500 hover:underline dark:text-blue-400">Add Training
+                </button>
+                <button type="button" id="remove-training"
+                        class="mt-4 px-4 py-2 text-sm text-blue-500 hover:underline dark:text-blue-400">Remove
+                    Training
+                </button>
+
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2 mt-4">Abilities</h3>
+                <div id="abilities" th:field="*{abilities}">
+                    <div class="ability grid grid-cols-4 gap-4 mt-2"
+                         th:each="ability, stat : *{abilities}"
+                         th:id="|ability-${stat.index}|">
+                        <div>
+                            <label for="ability-description"
+                                   class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                            <input type="text" id="ability-description"
+                                   th:field="*{abilities[__${stat.index}__].description}"
+                                   required
+                                   class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" id="add-ability"
+                        class="mt-4 px-4 py-2 text-sm text-blue-500 hover:underline dark:text-blue-400">Add Ability
+                </button>
+                <button type="button" id="remove-ability"
+                        class="mt-4 px-4 py-2 text-sm text-blue-500 hover:underline dark:text-blue-400">Remove
+                    Ability
+                </button>
+            </div>
+
+            <div class="flex flex-row justify-end">
+                <a href="/applications"
+                   class="mr-4 text-gray-600 hover:underline dark:text-gray-400 self-center">Cancel</a>
+                <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Submit Application
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<script layout:fragment="scripts">
+    function addContainer(parent, child, display) {
+        let index = document.getElementsByClassName(child).length;
+
+        const container = document.getElementById(parent);
+
+        const entry = document.createElement("div");
+        entry.id = `${child}-${index}`;
+        entry.classList.add(child, "grid", "grid-cols-4", "gap-4", "mt-2");
+        entry.innerHTML = display(index);
+
+        container.appendChild(entry);
+    }
+
+    function removeContainer(parent, child) {
+        const container = document.getElementById(parent);
+        const childs = container.getElementsByClassName(child);
+
+        if (childs.length < 1) {
+            return;
+        }
+
+        const lastChild = childs[childs.length - 1];
+        console.log(lastChild.innerHTML);
+        container.removeChild(lastChild);
+    }
+
+    document.getElementById("remove-experience").addEventListener("click", () => removeContainer("experiences", "experience"));
+    document.getElementById("add-experience").addEventListener("click", () => addContainer("experiences", "experience", (index) => `
+                        <div>
+                            <label for="experience-salary"
+                                   class="block text-sm font-medium text-gray-700 dark:text-gray-300">Salary</label>
+                            <input type="number" id="experience-salary"
+                                   name="experiences[${index}].salary"
+                                   value="0.0"
+                                   required
+                                   class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+
+                        <div>
+                            <label for="experience-started"
+                                   class="block text-sm font-medium text-gray-700 dark:text-gray-300">Started</label>
+                            <input type="date" id="experience-started"
+                                   name="experiences[${index}].started"
+                                   required
+                                   class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+
+                        <div>
+                            <label for="experience-finished" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Finished</label>
+                            <input type="date" id="experience-finished"
+                                   name="experiences[${index}].finished"
+                                   class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+
+                        <div>
+                            <label for="experience-company"
+                                   class="block text-sm font-medium text-gray-700 dark:text-gray-300">Company</label>
+                            <input type="text" id="experience-company"
+                                   name="experiences[${index}].company"
+                                   required
+                                   class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                    </div>`));
+
+    document.getElementById("remove-training").addEventListener("click", () => removeContainer("trainings", "training"));
+    document.getElementById("add-training").addEventListener("click", () => addContainer("trainings", "training", (index) => `
+                        <div>
+                            <label for="training-description"
+                                   class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                            <input type="text" id="training-description"
+                                   name="trainings[${index}].description"
+                                   required
+                                   class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>`));
+
+    document.getElementById("remove-ability").addEventListener("click", () => removeContainer("abilities", "ability"));
+    document.getElementById("add-ability").addEventListener("click", () => addContainer("abilities", "ability", (index) => `
+                        <div>
+                            <label for="ability-description"
+                                   class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                            <input type="text" id="ability-description"
+                                   name="abilities[${index}].description"
+                                   required
+                                   class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>`))
+</script>
+</body>
+</html>

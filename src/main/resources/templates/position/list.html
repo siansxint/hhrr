@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>Positions</title>
+</head>
+<body>
+<main layout:fragment="content" class="flex flex-col flex-grow container mx-auto my-4">
+    <div class="flex justify-end mb-4">
+        <a sec:authorize="hasAnyAuthority('EMPLOYEE', 'ADMIN')" href="/create" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Create New
+            Position</a>
+    </div>
+    <div class="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Name
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Description
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Risk
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Salary Ratio
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Department
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Languages
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Actions
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="position : ${positions}" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td th:text="${position.name}" class="px-6 py-4">Name</td>
+                <td th:text="${position.description}" class="px-6 py-4">Description</td>
+                <td th:text="${position.risk}" class="px-6 py-4">Risk</td>
+                <td class="px-6 py-4">
+                    <p th:text="${position.minSalary}">0</p> - <p th:text="${position.maxSalary}">10</p>
+                </td>
+                <td th:text="${position.department}" class="px-6 py-4">Department</td>
+                <td class="px-6 py-4">
+                    <ul>
+                        <li th:each="language : ${position.languages}" th:text="${language.name}"></li>
+                    </ul>
+                </td>
+                <td class="py-8 flex justify-around">
+                    <div sec:authorize="hasAnyAuthority('EMPLOYEE', 'ADMIN')">
+                        <a th:href="@{/edit/{id}(id=${position.id})}"
+                           class="text-blue-600 hover:underline">Edit</a>
+                        <form th:action="@{/delete/{id}(id=${position.id})}" method="post"
+                              onsubmit="return confirm('Are you sure you want to delete this position?');">
+                            <button type="submit" class="text-red-600 hover:underline">Delete</button>
+                        </form>
+                    </div>
+                    <a sec:authorize="hasAuthority('USER')" th:href="@{/applications/apply/{positionId}(positionId=${position.id})}"
+                       class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">Apply</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

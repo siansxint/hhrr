@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">HHRR</title>
+
+    <link rel="stylesheet" th:href="@{/css/application.css}">
+    <style>
+        .fade-out {
+            opacity: 1;
+            transition: opacity 1s ease-out;
+        }
+
+        .fade-out.hide {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body class="dark:bg-gray-900 antialiased flex flex-col min-h-screen">
+
+<main layout:fragment="main">
+    <div th:if="${error}" class="bg-red-500 text-white p-2 rounded mb-4 fade-out" id="error-message">
+        <p th:text="${error}">Error message</p>
+    </div>
+    <div layout:fragment="content">
+        Specific page content goes here
+    </div>
+</main>
+
+<footer class="bg-white dark:bg-gray-800 py-4 mt-auto">
+    <div class="container mx-auto px-4 text-center text-gray-600 dark:text-gray-400">
+        © 2024 Human Resources Management. All rights reserved.
+    </div>
+</footer>
+
+</body>
+</html>
