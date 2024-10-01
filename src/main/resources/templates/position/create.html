@@ -9,13 +9,13 @@
 </head>
 <body>
 <main layout:fragment="content" class="flex flex-col flex-grow justify-between container mx-auto my-4">
-    <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
+    <div class="bg-white text-white dark:bg-gray-800 shadow-md rounded-lg p-6">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Create a New Position</h2>
         <form th:action="@{/create}" th:object="${position}" method="post" class="space-y-6">
             <div>
                 <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Position
                     Name</label>
-                <input type="text" id="name" name="name" th:value="*{name}" th:field="*{name}" required
+                <input type="text" id="name" name="name" th:value="*{name}" th:field="*{name}"
                        class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                 <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
             </div>
@@ -23,8 +23,9 @@
             <div>
                 <label for="description"
                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
-                <textarea id="description" name="description" th:value="*{description}" th:field="*{description}"
-                          rows="3" required
+                <textarea id="description" name="description"
+                          th:field="*{description}"
+                          rows="3"
                           class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
                 <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
             </div>
@@ -44,7 +45,6 @@
                     <label for="minSalary" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Minimum
                         Salary</label>
                     <input type="number" id="minSalary" name="minSalary" th:value="*{minSalary}" th:field="*{minSalary}"
-                           required
                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                     <span th:if="${#fields.hasErrors('minSalary')}" th:errors="*{minSalary}"></span>
                 </div>
@@ -53,7 +53,6 @@
                     <label for="maxSalary" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Maximum
                         Salary</label>
                     <input type="number" id="maxSalary" name="maxSalary" th:value="*{maxSalary}" th:field="*{maxSalary}"
-                           required
                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                     <span th:if="${#fields.hasErrors('maxSalary')}" th:errors="*{maxSalary}"></span>
                 </div>
@@ -63,7 +62,6 @@
                 <label for="department"
                        class="block text-sm font-medium text-gray-700 dark:text-gray-300">Department</label>
                 <input type="text" id="department" name="department" th:value="*{department}" th:field="*{department}"
-                       required
                        class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                 <span th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></span>
             </div>
@@ -77,6 +75,56 @@
                             th:value="${language.id}"
                             th:text="${language.name}"></option>
                 </select>
+            </div>
+
+            <div class="app grid grid-cols-4 gap-4 mt-2"
+                 th:each="app, stat : *{applications}"
+                 th:id="|app-${stat.index}|">
+                <div hidden="hidden">
+                    <input type="hidden"
+                           th:field="*{applications[__${stat.index}__].id}"
+                           class="mt-1 block w-full">
+                    <input type="hidden"
+                           th:field="*{applications[__${stat.index}__].owner}"
+                           class="mt-1 block w-full">
+                    <input type="hidden"
+                           th:field="*{applications[__${stat.index}__].salaryExpectation}">
+                    <input type="hidden"
+                           th:field="*{applications[__${stat.index}__].experiences}"
+                           class="mt-1 block w-full">
+                    <input type="hidden"
+                           th:field="*{applications[__${stat.index}__].trainings}"
+                           class="mt-1 block w-full">
+                    <input type="hidden"
+                           th:field="*{applications[__${stat.index}__].abilities}"
+                           class="mt-1 block w-full">
+                    <input type="hidden"
+                           th:field="*{applications[__${stat.index}__].languages}"
+                           class="mt-1 block w-full">
+                    <input type="hidden"
+                           th:field="*{applications[__${stat.index}__].position}"
+                           class="mt-1 block w-full">
+                </div>
+            </div>
+            <div class="employee grid grid-cols-4 gap-4 mt-2"
+                 th:each="employee, stat : *{employees}"
+                 th:id="|employee-${stat.index}|">
+                <div hidden="hidden">
+                    <input type="hidden"
+                           th:field="*{employees[__${stat.index}__].id}"
+                           class="mt-1 block w-full">
+                    <input type="hidden"
+                           th:field="*{employees[__${stat.index}__].owner}"
+                           class="mt-1 block w-full">
+                    <input type="hidden"
+                           th:field="*{employees[__${stat.index}__].startedAt}">
+                    <input type="hidden"
+                           th:field="*{employees[__${stat.index}__].salary}"
+                           class="mt-1 block w-full">
+                    <input type="hidden"
+                           th:field="*{employees[__${stat.index}__].position}"
+                           class="mt-1 block w-full">
+                </div>
             </div>
 
             <div class="flex flex-row justify-end">

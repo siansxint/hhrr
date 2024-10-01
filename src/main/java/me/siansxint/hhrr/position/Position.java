@@ -54,5 +54,22 @@ public class Position {
 
     @Valid
     private @OneToMany(mappedBy = "position", cascade = CascadeType.ALL, orphanRemoval = true) List<Application> applications = new ArrayList<>();
-    private @OneToMany(mappedBy = "position") List<Employee> employees = new ArrayList<>();
+    @Valid
+    private @OneToMany(mappedBy = "position", cascade = CascadeType.ALL, orphanRemoval = true) List<Employee> employees = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "Position{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", risk=" + risk +
+                ", minSalary=" + minSalary +
+                ", maxSalary=" + maxSalary +
+                ", department='" + department + '\'' +
+                ", languages=" + languages +
+                ", applications=" + applications +
+                ", employees=" + employees +
+                '}';
+    }
 }

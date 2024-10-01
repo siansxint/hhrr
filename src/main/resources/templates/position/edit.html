@@ -8,7 +8,7 @@
 </head>
 <body>
 <main layout:fragment="content" class="flex flex-col flex-grow justify-between container mx-auto my-4">
-    <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
+    <div class="bg-white text-white dark:bg-gray-800 shadow-md rounded-lg p-6">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Edit Position: <span
                 th:text="*{position.name}"></span></h2>
 
@@ -25,7 +25,6 @@
                     <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
                     <input type="text" id="name" name="name"
                            th:field="*{name}"
-                           required
                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                     <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
                 </div>
@@ -33,7 +32,6 @@
                     <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mt-2">Description</label>
                     <input type="text" id="description" name="description"
                            th:field="*{description}"
-                           required
                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                     <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
                 </div>
@@ -52,7 +50,6 @@
                         Salary</label>
                     <input type="number" id="minSalary" name="minSalary"
                            th:field="*{minSalary}"
-                           required
                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                     <span th:if="${#fields.hasErrors('minSalary')}" th:errors="*{minSalary}"></span>
                 </div>
@@ -61,7 +58,6 @@
                         Salary</label>
                     <input type="number" id="maxSalary" name="maxSalary"
                            th:field="*{maxSalary}"
-                           required
                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                     <span th:if="${#fields.hasErrors('maxSalary')}" th:errors="*{maxSalary}"></span>
                 </div>
@@ -69,7 +65,6 @@
                     <label for="department" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mt-2">Department</label>
                     <input type="text" id="department" name="department"
                            th:field="*{department}"
-                           required
                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                     <span th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></span>
                 </div>
@@ -114,6 +109,26 @@
                                class="mt-1 block w-full">
                         <input type="hidden"
                                th:field="*{applications[__${stat.index}__].position}"
+                               class="mt-1 block w-full">
+                    </div>
+                </div>
+                <div class="employee grid grid-cols-4 gap-4 mt-2"
+                     th:each="employee, stat : *{employees}"
+                     th:id="|employee-${stat.index}|">
+                    <div hidden="hidden">
+                        <input type="hidden"
+                               th:field="*{employees[__${stat.index}__].id}"
+                               class="mt-1 block w-full">
+                        <input type="hidden"
+                               th:field="*{employees[__${stat.index}__].owner}"
+                               class="mt-1 block w-full">
+                        <input type="hidden"
+                               th:field="*{employees[__${stat.index}__].startedAt}">
+                        <input type="hidden"
+                               th:field="*{employees[__${stat.index}__].salary}"
+                               class="mt-1 block w-full">
+                        <input type="hidden"
+                               th:field="*{employees[__${stat.index}__].position}"
                                class="mt-1 block w-full">
                     </div>
                 </div>

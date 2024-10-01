@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,9 +31,11 @@ public class User implements UserDetails {
     @Pattern(regexp = "\\d{3}-\\d{7}-\\d")
     @NotEmpty(message = "You must provide a valid Card ID (000-0000000-0)")
     private @Column(name = "card_id", unique = true, nullable = false) String cardId;
+    @NotEmpty
     @Getter
     private @Column(nullable = false) String name;
 
+    @NotEmpty
     @Email
     private @Column(nullable = false) String email;
     @NotEmpty

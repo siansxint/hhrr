@@ -5,6 +5,7 @@ import me.siansxint.hhrr.employee.Employee;
 import me.siansxint.hhrr.language.LanguageRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,7 +40,16 @@ public class PositionController {
     }
 
     @PostMapping("/create")
-    public String create(@Valid @ModelAttribute("position") Position position) {
+    public String create(@Valid @ModelAttribute("position") Position position, BindingResult result, Model model) {
+        if (position.getMinSalary() > position.getMaxSalary()) {
+            result.rejectValue("minSalary", "error.position", "Min Salary cannot be greater than Max Salary");
+        }
+
+        if (result.hasErrors()) {
+            model.addAttribute("languages", languageRepository.findAll());
+            return "position/create";
+        }
+
         positionRepository.save(position);
         return "redirect:/";
     }
@@ -52,7 +62,16 @@ public class PositionController {
     }
 
     @PostMapping("/edit")
-    public String edit(@Valid @ModelAttribute("position") Position position) {
+    public String edit(@Valid @ModelAttribute("position") Position position, BindingResult result, Model model) {
+        if (position.getMinSalary() > position.getMaxSalary()) {
+            result.rejectValue("minSalary", "error.position", "Min Salary cannot be greater than Max Salary");
+        }
+
+        if (result.hasErrors()) {
+            model.addAttribute("languages", languageRepository.findAll());
+            return "position/edit";
+        }
+
         positionRepository.save(position);
         return "redirect:/";
     }

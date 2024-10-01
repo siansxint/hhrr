@@ -24,10 +24,10 @@ public class Experience {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Positive
+    @PositiveOrZero
     private @Column(nullable = false) double salary;
 
-    @Past
+    @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private @Column(nullable = false) LocalDate started;
 

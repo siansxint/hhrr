@@ -1,6 +1,7 @@
 package me.siansxint.hhrr.employee;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +28,7 @@ public class Employee {
     @JoinColumn(name = "owner")
     private User owner;
 
+    @NotNull
     private @Column(nullable = false) LocalDate startedAt;
 
     @PositiveOrZero

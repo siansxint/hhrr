@@ -8,7 +8,7 @@
 </head>
 <body>
 <main layout:fragment="content" class="flex flex-col flex-grow justify-between container mx-auto my-4">
-    <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
+    <div class="bg-white text-white dark:bg-gray-800 shadow-md rounded-lg p-6">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Edit Application for Position: <span
                 th:text="*{app.position.name}"></span></h2>
 
@@ -35,22 +35,19 @@
                 <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Your Application Details</h2>
 
                 <div>
-                    <label for="id" class="block text-sm font-medium text-gray-700 dark:text-gray-300"></label>
                     <input type="hidden" id="id"
                            th:field="*{id}"
                            class="mt-1 block w-full">
                 </div>
                 <div>
-                    <label for="position" class="block text-sm font-medium text-gray-700 dark:text-gray-300"></label>
                     <input type="hidden" id="position"
                            th:field="*{position.id}"
                            class="mt-1 block w-full">
                 </div>
                 <div>
-                    <label for="owner" class="block text-sm font-medium text-gray-700 dark:text-gray-300"></label>
-                    <input type="hidden" id="owner"
+                    <input type="hidden"
                            th:field="*{owner.id}"
-                           class="mt-1 block w-full">
+                           class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                 </div>
 
                 <div>
@@ -60,6 +57,7 @@
                            th:field="*{salaryExpectation}"
                            required
                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    <span th:if="${#fields.hasErrors('salaryExpectation')}" th:errors="*{salaryExpectation}">Invalid Salary Expectation</span>
                 </div>
 
                 <div>
@@ -82,19 +80,18 @@
                          th:each="experience, stat : *{experiences}"
                          th:id="|experience-${stat.index}|">
                         <div hidden="hidden">
-                            <label for="position"
-                                   class="block text-sm font-medium text-gray-700 dark:text-gray-300"></label>
                             <input type="hidden" id="experience-id"
                                    th:field="*{experiences[__${stat.index}__].id}"
                                    class="mt-1 block w-full">
+
                         </div>
                         <div>
                             <label for="experience-salary"
                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Salary</label>
                             <input type="number" id="experience-salary"
                                    th:field="*{experiences[__${stat.index}__].salary}"
-                                   required
                                    class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <span th:if="${#fields.hasErrors('experiences[0].salary')}" th:errors="*{experiences[__${stat.index}__].salary}">Invalid Experience Salary</span>
                         </div>
 
                         <div>
@@ -102,8 +99,8 @@
                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Started</label>
                             <input type="date" id="experience-started"
                                    th:field="*{experiences[__${stat.index}__].started}"
-                                   required
                                    class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <span th:if="${#fields.hasErrors('experiences[0].started')}" th:errors="*{experiences[__${stat.index}__].started}">Invalid Started Date</span>
                         </div>
 
                         <div>
@@ -112,6 +109,7 @@
                             <input type="date" id="experience-finished"
                                    th:field="*{experiences[__${stat.index}__].finished}"
                                    class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <span th:if="${#fields.hasErrors('experiences[0].finished')}" th:errors="*{experiences[__${stat.index}__].finished}">Invalid Finished Date</span>
                         </div>
 
                         <div>
@@ -119,8 +117,8 @@
                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Company</label>
                             <input type="text" id="experience-company"
                                    th:field="*{experiences[__${stat.index}__].company}"
-                                   required
                                    class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <span th:if="${#fields.hasErrors('experiences[0].company')}" th:errors="*{experiences[__${stat.index}__].company}">Invalid Company Name</span>
                         </div>
                     </div>
                 </div>

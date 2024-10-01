@@ -19,9 +19,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 @Controller
 @RequestMapping("/applications")
@@ -97,9 +97,13 @@ public class ApplicationController {
 
     @PostMapping("/create")
     public String create(@Valid @ModelAttribute("app") Application application, BindingResult result, Model model) {
+        checkForExperienceErrors(application, result);
         if (result.hasErrors()) {
-            model.addAttribute("app", application);
             model.addAttribute("languages", languageRepository.findAll());
+            Position reFetched = positionRepository.findById(application.getPosition().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid position ID: " + application.getPosition().getId()));
+
+            application.setPosition(reFetched);
             return "application/create";
         }
 
@@ -117,8 +121,14 @@ public class ApplicationController {
     }
 
     @PostMapping("/edit")
-    public String edit(@Valid @ModelAttribute("application") Application application, BindingResult result) {
+    public String edit(@Valid @ModelAttribute("app") Application application, BindingResult result, Model model) {
+        checkForExperienceErrors(application, result);
         if (result.hasErrors()) {
+            Position reFetched = positionRepository.findById(application.getPosition().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid position ID: " + application.getPosition().getId()));
+
+            application.setPosition(reFetched);
+            model.addAttribute("languages", languageRepository.findAll());
             return "application/edit";
         }
 
@@ -139,16 +149,30 @@ public class ApplicationController {
 
     @GetMapping("/hire/{id}")
     public String hire(@PathVariable("id") long id, Model model) {
-        model.addAttribute("app", applicationRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid application ID: " + id)));
+        Application application = applicationRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid application ID: " + id));
+
+        HireRequirementsDTO hireModel = new HireRequirementsDTO();
+        hireModel.setApp(application);
+
+        model.addAttribute("hire", hireModel);
         return "application/hire";
     }
 
-    @PostMapping("/hire/{id}")
-    public String hire(@PathVariable("id") long id, long salary, LocalDate startAt) {
-        Application application = applicationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid application ID: " + id));
+    @PostMapping("/hire")
+    public String hire(@Valid @ModelAttribute("hire") HireRequirementsDTO hireModel, BindingResult result) {
+        Application application = applicationRepository.findById(hireModel.getApp().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid application ID: " + hireModel.getApp().getId()));
+        Position position = application.getPosition();
+        if (hireModel.getSalary() < position.getMinSalary() || hireModel.getSalary() > position.getMaxSalary()) {
+            result.rejectValue("salary", "error.salary", "Salary must be between position salary ratio!");
+        }
 
-        User user = getCurrentUser();
+        if (result.hasErrors()) {
+            hireModel.setApp(application);
+            return "application/hire";
+        }
+
+        User user = application.getOwner();
         if (user == null) {
             return "application/list";
         }
@@ -159,9 +183,9 @@ public class ApplicationController {
 
         Employee employee = new Employee();
         employee.setOwner(user);
-        employee.setSalary(salary);
-        employee.setPosition(application.getPosition());
-        employee.setStartedAt(startAt);
+        employee.setSalary(hireModel.getSalary());
+        employee.setPosition(position);
+        employee.setStartedAt(hireModel.getStartAt());
 
         employeeRepository.save(employee);
         user.setRole(User.Role.EMPLOYEE);
@@ -181,6 +205,26 @@ public class ApplicationController {
         }
 
         return userRepository.findUserByEmail(details.getUsername()).orElseThrow(() -> new IllegalArgumentException("Invalid user: " + details.getUsername()));
+    }
+
+    private void checkForExperienceErrors(Application application, BindingResult result) {
+        List<Experience> experiences = application.getExperiences();
+        for (int i = 0; i < experiences.size(); i++) {
+            Experience experience = experiences.get(i);
+            if (experience.getFinished() == null) {
+                continue;
+            }
+
+            if (!experience.getStarted().isAfter(experience.getFinished())) {
+                continue;
+            }
+
+            result.rejectValue(
+                    "experiences[" + i + "].started",
+                    "experiences.started",
+                    "This date cannot be after finished!"
+            );
+        }
     }
 
     private void setChildApplication(Application application) {

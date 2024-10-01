@@ -8,7 +8,7 @@
 </head>
 <body>
 <main layout:fragment="content" class="flex flex-col flex-grow justify-between container mx-auto my-4">
-    <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
+    <div class="bg-white text-white dark:bg-gray-800 shadow-md rounded-lg p-6">
         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Apply for Position: <span
                 th:text="*{app.position.name}"></span></h2>
 
@@ -52,7 +52,7 @@
                            th:field="*{salaryExpectation}"
                            required
                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                    <span th:if="${#fields.hasErrors('salaryExpectation')}" th:errors="*{salaryExpectation}">Invalid Salary</span>
+                    <span th:if="${#fields.hasErrors('salaryExpectation')}" th:errors="*{salaryExpectation}">Invalid Salary Expectation</span>
                 </div>
 
                 <div>
@@ -78,8 +78,8 @@
                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Salary</label>
                             <input type="number" id="experience-salary"
                                    th:field="*{experiences[__${stat.index}__].salary}"
-                                   required
                                    class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <span th:if="${#fields.hasErrors('experiences[0].salary')}" th:errors="*{experiences[__${stat.index}__].salary}">Invalid Experience Salary</span>
                         </div>
 
                         <div>
@@ -87,8 +87,8 @@
                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Started</label>
                             <input type="date" id="experience-started"
                                    th:field="*{experiences[__${stat.index}__].started}"
-                                   required
                                    class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <span th:if="${#fields.hasErrors('experiences[0].started')}" th:errors="*{experiences[__${stat.index}__].started}">Invalid Started Date</span>
                         </div>
 
                         <div>
@@ -97,6 +97,7 @@
                             <input type="date" id="experience-finished"
                                    th:field="*{experiences[__${stat.index}__].finished}"
                                    class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <span th:if="${#fields.hasErrors('experiences[0].finished')}" th:errors="*{experiences[__${stat.index}__].finished}">Invalid Finished Date</span>
                         </div>
 
                         <div>
@@ -104,8 +105,8 @@
                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Company</label>
                             <input type="text" id="experience-company"
                                    th:field="*{experiences[__${stat.index}__].company}"
-                                   required
                                    class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <span th:if="${#fields.hasErrors('experiences[0].company')}" th:errors="*{experiences[__${stat.index}__].company}">Invalid Company Name</span>
                         </div>
                     </div>
                 </div>
@@ -128,8 +129,8 @@
                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
                             <input type="text" id="training-description"
                                    th:field="*{trainings[__${stat.index}__].description}"
-                                   required
                                    class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <span th:if="${#fields.hasErrors('trainings[0].description')}" th:errors="*{trainings[__${stat.index}__].description}">Invalid Training Description</span>
                         </div>
                     </div>
                 </div>
@@ -152,8 +153,8 @@
                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
                             <input type="text" id="ability-description"
                                    th:field="*{abilities[__${stat.index}__].description}"
-                                   required
                                    class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <span th:if="${#fields.hasErrors('abilities[0].description')}" th:errors="*{abilities[__${stat.index}__].description}">Invalid Ability Description</span>
                         </div>
                     </div>
                 </div>
@@ -214,7 +215,6 @@
                             <input type="number" id="experience-salary"
                                    name="experiences[${index}].salary"
                                    value="0.0"
-                                   required
                                    class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                         </div>
 
@@ -223,7 +223,6 @@
                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Started</label>
                             <input type="date" id="experience-started"
                                    name="experiences[${index}].started"
-                                   required
                                    class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                         </div>
 
@@ -239,7 +238,6 @@
                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Company</label>
                             <input type="text" id="experience-company"
                                    name="experiences[${index}].company"
-                                   required
                                    class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                         </div>
                     </div>`));
@@ -251,7 +249,6 @@
                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
                             <input type="text" id="training-description"
                                    name="trainings[${index}].description"
-                                   required
                                    class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                         </div>`));
 
@@ -262,7 +259,6 @@
                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
                             <input type="text" id="ability-description"
                                    name="abilities[${index}].description"
-                                   required
                                    class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                         </div>`))
 </script>

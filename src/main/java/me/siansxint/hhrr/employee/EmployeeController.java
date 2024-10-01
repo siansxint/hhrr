@@ -3,7 +3,10 @@ package me.siansxint.hhrr.employee;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import me.siansxint.hhrr.position.Position;
 import me.siansxint.hhrr.position.PositionRepository;
+import me.siansxint.hhrr.user.User;
+import me.siansxint.hhrr.user.UserRepository;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -14,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -27,10 +31,12 @@ public class EmployeeController {
 
     private final EmployeeRepository employeeRepository;
     private final PositionRepository positionRepository;
+    private final UserRepository userRepository;
 
-    public EmployeeController(EmployeeRepository employeeRepository, PositionRepository positionRepository) {
+    public EmployeeController(EmployeeRepository employeeRepository, PositionRepository positionRepository, UserRepository userRepository) {
         this.employeeRepository = employeeRepository;
         this.positionRepository = positionRepository;
+        this.userRepository = userRepository;
     }
 
     @ModelAttribute("employees")
@@ -64,7 +70,21 @@ public class EmployeeController {
     }
 
     @PostMapping("/edit")
-    public String edit(@Valid @ModelAttribute("employee") Employee employee) {
+    public String edit(@Valid @ModelAttribute("employee") Employee employee, BindingResult result, Model model) {
+        Position position = positionRepository.findById(employee.getPosition().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid position ID: " + employee.getPosition().getId()));
+        if (employee.getSalary() < position.getMinSalary() || employee.getSalary() > position.getMaxSalary()) {
+            result.rejectValue("salary", "error.salary", "Salary must be between position salary ratio!");
+        }
+
+        if (result.hasErrors()) {
+            User user = userRepository.findById(employee.getOwner().getId())
+                            .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + employee.getOwner().getId()));
+            employee.setOwner(user);
+            model.addAttribute("positions", positionRepository.findAll());
+            return "employee/edit";
+        }
+
         employeeRepository.save(employee);
         return "redirect:/employees";
     }

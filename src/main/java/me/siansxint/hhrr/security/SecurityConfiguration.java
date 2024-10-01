@@ -49,7 +49,7 @@ public class SecurityConfiguration {
                                 .loginPage("/auth/login")
                                 .permitAll())
                 .logout(configurer ->
-                        configurer.logoutSuccessUrl("/auth/login")
+                        configurer.logoutSuccessUrl("/auth/login?logout")
                                 .permitAll())
                 .build();
     }
