@@ -13,16 +13,21 @@
                     <form action="/auth/login" method="post">
                         <label for="username" class="block text-sm font-medium leading-6 text-gray-50">Email</label>
                         <div class="relative mt-2 rounded-md shadow-sm">
-                            <input type="text" name="username" id="username" class="block w-full rounded-md border-none py-1.5 px-2 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 w-2xl" placeholder="user@example.me">
+                            <input type="text" name="username" id="username" class="block w-full rounded-md border-none py-1.5 px-2 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 w-2xl" required placeholder="user@example.me">
                         </div>
 
                         <label for="password" class="mt-4 block text-sm font-medium leading-6 text-gray-50">Password</label>
                         <div class="relative mt-2 rounded-md shadow-sm">
-                            <input type="password" name="password" id="password" class="block w-full rounded-md border-none py-1.5 px-2 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 w-2xl" placeholder="Your password">
+                            <input type="password" name="password" id="password" class="block w-full rounded-md border-none py-1.5 px-2 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 w-2xl" required placeholder="Your password">
                         </div>
 
                         <button class="mt-8 rounded-md bg-gray-600 px-24 py-2 hover:bg-gray-500" type="submit">Log In</button>
                     </form>
+
+                    <div th:if="${param.error}" class="mt-4 px-2 py-2 bg-red-500/25 rounded-md w-58 min-w-58 max-w-58 flex mx-auto text-center">
+                        Invalid username or password.</div>
+                    <div th:if="${param.logout}" class="mt-4 px-2 py-2 bg-red-500/25 rounded-md w-58 min-w-58 max-w-58 flex mx-auto text-center">
+                        You have been logged out.</div>
 
                     <div class="block mt-8 text-center -mb-4">
                         <span>Do not have an account?</span>
