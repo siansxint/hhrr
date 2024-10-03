@@ -72,14 +72,20 @@ public class EmployeeController {
     @PostMapping("/edit")
     public String edit(@Valid @ModelAttribute("employee") Employee employee, BindingResult result, Model model) {
         Position position = positionRepository.findById(employee.getPosition().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid position ID: " + employee.getPosition().getId()));
-        if (employee.getSalary() < position.getMinSalary() || employee.getSalary() > position.getMaxSalary()) {
-            result.rejectValue("salary", "error.salary", "Salary must be between position salary ratio!");
+                .orElse(null);
+
+        if (position == null) {
+            result.rejectValue("position", "error.position", "Invalid position selected!");
+        } else {
+            employee.setPosition(position);
+            if (employee.getSalary() < position.getMinSalary() || employee.getSalary() > position.getMaxSalary()) {
+                result.rejectValue("salary", "error.salary", "Salary must be between position salary range!");
+            }
         }
 
         if (result.hasErrors()) {
             User user = userRepository.findById(employee.getOwner().getId())
-                            .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + employee.getOwner().getId()));
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + employee.getOwner().getId()));
             employee.setOwner(user);
             model.addAttribute("positions", positionRepository.findAll());
             return "employee/edit";

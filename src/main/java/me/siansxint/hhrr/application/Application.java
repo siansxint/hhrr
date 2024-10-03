@@ -64,18 +64,4 @@ public class Application {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "position")
     private Position position;
-
-    @Override
-    public String toString() {
-        return "Application{" +
-                "id=" + id +
-                ", owner=" + owner +
-                ", salaryExpectation=" + salaryExpectation +
-                ", experiences=" + experiences +
-                ", trainings=" + trainings +
-                ", abilities=" + abilities +
-                ", languages=" + languages +
-                ", position=" + position +
-                '}';
-    }
 }

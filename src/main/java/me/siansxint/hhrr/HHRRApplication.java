@@ -3,6 +3,8 @@ package me.siansxint.hhrr;
 import me.siansxint.hhrr.ability.Ability;
 import me.siansxint.hhrr.application.Application;
 import me.siansxint.hhrr.application.ApplicationRepository;
+import me.siansxint.hhrr.employee.Employee;
+import me.siansxint.hhrr.employee.EmployeeRepository;
 import me.siansxint.hhrr.experience.Experience;
 import me.siansxint.hhrr.language.Language;
 import me.siansxint.hhrr.language.LanguageRepository;
@@ -20,18 +22,65 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @SpringBootApplication
 public class HHRRApplication {
 
+    private static final List<String> LANGUAGE_NAMES = List.of(
+            "German",
+            "French",
+            "Italian",
+            "Portuguese",
+            "Russian",
+            "Hindi",
+            "Bengali",
+            "Persian (Farsi)",
+            "Mandarin Chinese",
+            "Cantonese",
+            "Tibetan",
+            "Burmese",
+            "Arabic",
+            "Hebrew",
+            "Amharic",
+            "Somali",
+            "Swahili",
+            "Yoruba",
+            "Igbo",
+            "Zulu",
+            "Turkish",
+            "Kazakh",
+            "Uzbek",
+            "Mongolian",
+            "Indonesian",
+            "Tagalog",
+            "Malay",
+            "Javanese",
+            "Tamil",
+            "Telugu",
+            "Kannada",
+            "Malayalam",
+            "Nama",
+            "!Xóõ",
+            "Finnish",
+            "Hungarian",
+            "Estonian",
+            "Vietnamese",
+            "Thai",
+            "Korean",
+            "Japanese",
+            "Greek",
+            "Icelandic"
+    );
+
     public static void main(String[] args) {
         SpringApplication.run(HHRRApplication.class, args);
     }
 
     @Bean
-    public CommandLineRunner commandLineRunner(UserRepository userRepository, ApplicationRepository applicationRepository, PositionRepository positionRepository, PasswordEncoder passwordEncoder, LanguageRepository languageRepository) {
+    public CommandLineRunner commandLineRunner(UserRepository userRepository, ApplicationRepository applicationRepository, PositionRepository positionRepository, PasswordEncoder passwordEncoder, LanguageRepository languageRepository, EmployeeRepository employeeRepository) {
         return args -> {
             User user = new User();
             user.setEmail("user@example.me");
@@ -56,6 +105,15 @@ public class HHRRApplication {
 
             userRepository.saveAll(List.of(user, employee, admin));
 
+            List<Language> languages = new ArrayList<>();
+            for (String name : LANGUAGE_NAMES) {
+                Language language = new Language();
+                language.setName(name);
+                languages.add(language);
+            }
+
+            languageRepository.saveAll(languages); // default ones
+
             Language spanish = new Language();
             spanish.setName("Spanish");
 
@@ -75,6 +133,14 @@ public class HHRRApplication {
             position.getLanguages().addAll(List.of(spanish, english));
 
             positionRepository.save(position);
+
+            Employee employee1 = new Employee();
+            employee1.setOwner(employee);
+            employee1.setSalary(10000);
+            employee1.setStartedAt(LocalDate.now());
+            employee1.setPosition(position);
+
+            employeeRepository.save(employee1);
 
             Application application = new Application();
             application.setPosition(position);

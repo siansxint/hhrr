@@ -24,16 +24,23 @@
                            th:field="*{owner.id}"
                            class="mt-1 block w-full">
                 </div>
+                <div>
+                    <input type="hidden"
+                           th:field="*{position.id}"
+                           class="mt-1 block w-full">
+                </div>
 
                 <div>
-                    <label for="salary" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Salary</label>
+                    <label for="salary"
+                           class="block text-sm font-medium text-gray-700 dark:text-gray-300">Salary</label>
                     <input type="number" id="salary" name="salary"
                            th:field="*{salary}"
                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                     <span th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}"></span>
                 </div>
                 <div>
-                    <label for="startedAt" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mt-2">Starts At</label>
+                    <label for="startedAt" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mt-2">Starts
+                        At</label>
                     <input type="date" id="startedAt" name="startedAt"
                            th:field="*{startedAt}"
                            class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
@@ -49,8 +56,9 @@
                         <option th:each="position : ${positions}"
                                 th:value="${position.id}"
                                 th:text="${position.name}"
-                                th:selected="${employee.position != null and employee.position.id == position.id}" ></option>
+                                th:selected="${employee.position != null and employee.position.id == position.id}"></option>
                     </select>
+                    <span th:if="${#fields.hasErrors('position')}" th:errors="*{position}"></span>
                 </div>
 
                 <div class="flex flex-row justify-end mt-6">

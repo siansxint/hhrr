@@ -1,5 +1,6 @@
 package me.siansxint.hhrr.application;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,4 +11,6 @@ import java.util.Optional;
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
 
     Collection<Application> findApplicationsByOwnerId(long id);
+
+    Collection<Application> findApplicationsByOwnerId(Long ownerId, Sort sort);
 }

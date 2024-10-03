@@ -97,12 +97,19 @@ public class ApplicationController {
 
     @PostMapping("/create")
     public String create(@Valid @ModelAttribute("app") Application application, BindingResult result, Model model) {
+        Position reFetched = positionRepository.findById(application.getPosition().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid position ID: " + application.getPosition().getId()));
+        if (application.getSalaryExpectation() < reFetched.getMinSalary() || application.getSalaryExpectation() > reFetched.getMaxSalary()) {
+            result.rejectValue(
+                    "salaryExpectation",
+                    "application.expectedSalary",
+                    "Salary expectation cannot be lower/higher than position salary ratio!"
+            );
+        }
+
         checkForExperienceErrors(application, result);
         if (result.hasErrors()) {
             model.addAttribute("languages", languageRepository.findAll());
-            Position reFetched = positionRepository.findById(application.getPosition().getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid position ID: " + application.getPosition().getId()));
-
             application.setPosition(reFetched);
             return "application/create";
         }
@@ -122,11 +129,18 @@ public class ApplicationController {
 
     @PostMapping("/edit")
     public String edit(@Valid @ModelAttribute("app") Application application, BindingResult result, Model model) {
+        Position reFetched = positionRepository.findById(application.getPosition().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid position ID: " + application.getPosition().getId()));
+        if (application.getSalaryExpectation() < reFetched.getMinSalary() || application.getSalaryExpectation() > reFetched.getMaxSalary()) {
+            result.rejectValue(
+                    "salaryExpectation",
+                    "application.expectedSalary",
+                    "Salary expectation cannot be lower/higher than position salary ratio!"
+            );
+        }
+
         checkForExperienceErrors(application, result);
         if (result.hasErrors()) {
-            Position reFetched = positionRepository.findById(application.getPosition().getId())
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid position ID: " + application.getPosition().getId()));
-
             application.setPosition(reFetched);
             model.addAttribute("languages", languageRepository.findAll());
             return "application/edit";
